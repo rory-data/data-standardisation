@@ -1,0 +1,132 @@
+[project]
+name = "data-standardisation"
+version = "0.0.1"
+description = "This is a project for experimentation for tasks in a Standardise stage in an ETL pipeline."
+authors = [{ name = "Rory Purcell-Hewitt" }]
+readme = "README.md"
+keywords = ['python']
+requires-python = ">=3.11,<3.13"
+classifiers = [
+    "Intended Audience :: Data Engineers",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "duckdb>=1.2.1",
+    "ibis-framework[duckdb,polars]>=10.3",
+    "polars>=1.26.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=7.2.0",
+    "pre-commit>=2.20.0",
+    "mypy>=0.991",
+    "pytest-cov>=4.0.0",
+    "ruff>=0.9.2",
+    
+]
+
+[tool.uv]
+package = false
+ 
+[tool.ruff]
+# Ruff configuration
+target-version = "py312"
+line-length = 120
+fix = true
+ 
+[tool.ruff.lint]
+select = [
+    "A",   # flake8-builtins
+    "AIR", # Airflow
+    "B",   # flake8-bugbear
+    "C4",  # flake8-comprehensions
+    "C90", # mccabe
+    "D",   # pydocstyle
+    "E",   # pycodestyle errors
+    "F",   # pyflakes
+    "I",   # isort
+    "N",   # pep8-naming
+    "PT",  # flake8-pytest-style
+    "RUF", # Ruff-specific rules
+    "S",   # flake8-bandit
+    "SIM", # flake8-simplify
+    "T20", # flake8-print
+    "UP",  # pyupgrade
+    "W",   # pycodestyle warnings
+]
+ignore = [
+    "C901", # complex-structure (mccabe)
+    "D203", # one-blank-line-before-class (conflicts with D211)
+    "D212", # multi-line-summary-first-line (conflicts with D213)
+    "E501", # line-too-long
+    "F403", # undefined-local-with-import-star
+]
+# Let unfixable automatically be ignored during ruff format
+unfixable = [
+    "F401", # unused-import
+]
+ 
+[tool.ruff.format]
+quote-style = "double"  # like Black, use double quotes for strings.
+indent-style = "space"  # like Black, indent with spaces.
+skip-magic-trailing-comma = false  # like Black, respect magic trailing commas.
+line-ending = "auto"  # like Black, automatically detect the appropriate line ending.
+docstring-code-format = false
+docstring-code-line-length = "dynamic"
+ 
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"] # unused import in __init__ files
+"tests/*" = ["S101", "ANN", "S603"] # assert usage and type annotations in tests
+"conftest.py" = [
+    "S101",
+    "ANN",
+] # assert usage and type annotations in pytest config
+ 
+[tool.ruff.lint.isort]
+known-first-party = ["your_package_name"]
+known-third-party = ["pytest", "requests"]
+ 
+[tool.ruff.lint.pydocstyle]
+convention = "google" # Use Google-style docstrings
+ 
+[tool.mypy]
+# MyPy configuration
+python_version = "3.12"
+disallow_untyped_defs = true
+disallow_any_unimported = true
+no_implicit_optional = true
+check_untyped_defs = true
+warn_return_any = true
+warn_unused_ignores = true
+show_error_codes = true
+ 
+# Per-module options
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+ 
+[[tool.mypy.overrides]]
+module = ["pytest.*", "setuptools.*"]
+ignore_missing_imports = true
+ 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
+python_classes = "Test*"
+addopts = "-v --cov=your_package_name --cov-report=term-missing"
+
+[tool.coverage.report]
+skip_empty = true
+
+[tool.coverage.run]
+branch = true
+source = [
+    "data_standardisation"
+]
+
